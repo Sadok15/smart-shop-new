@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SMART_SHOP</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/animate.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/icomoon.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/magnific-popup.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/owl.carousel.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/owl.theme.default.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/style.css')}}">
+    <script src="{{url_for('static',filename='/js1/modernizr-2.6.2.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/respond.min.js')}}"></script>
+    <style>
+        .panel-heading .accordion-toggle:after {
+            font-family: 'Glyphicons Halflings';
+            content: "\e114";
+            float: right;
+            color: grey;
+           }
+        .panel-heading .accordion-toggle.collapsed:after {
+            content: "\e080";
+        }
+
+    .alert-info {
+          background-color: yellow;
+          color: black;
+    }
+    </style>
+</head>
+<body>
+<div class="fh5co-loader"></div>
+<div id="page">
+    <nav class="fh5co-nav" role="navigation">
+        <div class="top-menu">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-1">
+                        {% if etat == "connecter" %}
+                        <div id="fh5co-logo"><a href="{{url_for('Products API.get_list_produits')}}">SMART<span>.</span>SHOP</a>
+                        </div>
+                        {% elif etat == "non connecter" %}
+                        <div id="fh5co-logo"><a href="{{url_for('Products API.get_list_produits')}}">SMART<span>.</span>SHOP</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-11 text-right menu-1">
+                        <ul>
+                            {% if etat == "connecter" %}
+                            <li class="active"><a href="{{url_for('Products API.get_list_produits')}}">Acceuil</a></li>
+                            {% elif etat == "non connecter" %}
+                            <li class="active"><a href="{{url_for('Products API.get_list_produits')}}">Acceuil</a></li>
+                            {% endif %}
+                            <li class="has-dropdown">
+                                <a href="#">Categories</a>
+                                <ul class="dropdown">
+                                    <li>
+                                        <a href="{{url_for('Products API.get_produits_by_cat',id_cat=1)}}">Accessoires</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{url_for('Products API.get_produits_by_cat',id_cat=2)}}">Smartphone</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{url_for('Products API.get_produits_by_cat',id_cat=3)}}">Ordinateurs</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% if etat == "connecter" %}
+                            <li>
+                                <a href="{{url_for('Pannier API.get_pannier_by_id_user',id_user=session.id)}}">Pannier</a>
+                            </li>
+                            <li><a href="{{url_for('Auth API.profile')}}">Profile</a></li>
+                            <li class="btn-cta">
+                                <a href="{{url_for('Auth API.se_connecter')}}"><span>deconnexion</span></a>
+                            </li>
+                            <li class="btn-cta">
+                                <a href="{{url_for('Auth API.profile')}}"><span>{{ session.name }} {{ session.lastname }}</span></a>
+                            </li>
+                            {% elif etat == "non connecter" %}
+                            <li class="btn-cta">
+                                <a href="{{url_for('Auth API.se_connecter')}}"><span>connexion</span></a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header id="fh5co-header" class="fh5co-cover" role="banner"
+            style="background-image:url({{url_for('static',filename='/images/img_bg_1.jpg')}});"
+            data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <div class="display-t">
+                        <div class="display-tc animate-box" data-animate-effect="fadeIn">
+                            <h1>E-Commerce Platforme</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="fh5co-counter" class="fh5co-counters">
+        <div class="container">
+            <div class="row" style="margin-right: -40rem;">
+                <div class="col-md-3 text-center animate-box">
+                    <span class="fh5co-counter js-counter" data-from="0" data-to="{{nb_prod}}" data-speed="5000"
+                          data-refresh-interval="50"></span>
+                    <span class="fh5co-counter-label">Produits</span>
+                </div>
+                <div class="col-md-3 text-center animate-box">
+                    <span class="fh5co-counter js-counter" data-from="0" data-to="{{nb_dispo}}" data-speed="5000"
+                          data-refresh-interval="50"></span>
+                    <span class="fh5co-counter-label">Pourcentage Dispo (%)</span>
+                </div>
+                <div class="col-md-3 text-center animate-box">
+                    <span class="fh5co-counter js-counter" data-from="0" data-to="{{nb_cat}}" data-speed="5000"
+                          data-refresh-interval="50"></span>
+                    <span class="fh5co-counter-label">Categories</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fh5co-explore" class="fh5co-bg-section">
+        <div class="container">
+            <div class="row animate-box">
+                <div class="col-md-12 col-md-offset-0 fh5co-heading">
+                    <div class="row">
+                        <div class="row" style="margin-right: -40rem;padding: 0rem 9rem 7rem;">
+                            <div class="col-md-4">
+                                <form method="POST" action="{{url_for('Products API.detect_product_voice')}}">
+                                    <input class="btn btn-success" name="vocal"
+                                           value="Lancer recherche Vocal"
+                                           style="padding: 1rem 4rem 2rem;margin-left: -8rem;" onclick="maFonction()"
+                                           type="submit">
+                                        <div id="maDIV" style="display:none;">
+                                            Votre demande svp ?
+                                        </div>
+                                </form>
+                            </div>
+                            <!--<div class="col-md-4" style="margin-left: 33rem;">
+                                <form method="POST" action="">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="customFile">
+                                        <button class="btn btn-success" style="margin-top: 2rem;">
+                                            Recherche
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>!-->
+                        </div>
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                                           href="#collapseOne">
+                                            Filtre
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <form method="POST" action="{{url_for('Products API.filtre_produit')}}">
+                                            <div class="row" style="padding: 0rem 26rem 0rem;margin: 2rem -25rem 0rem;">
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Produit</label>
+                                                        <input type="text" class="form-control"
+                                                               placeholder="recherche produit"
+                                                               style="border-radius: 3rem;" name="libelle">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Disponibilité</label>
+                                                        <select class="form-select" aria-label="Default select example"
+                                                                name="disponible"
+                                                                style="border-radius: 3rem;padding: 1rem 2rem 2rem;">
+                                                            <option selected>Selectionner Disponibilité</option>
+                                                            <option value="Oui">Oui</option>
+                                                            <option value="Non">Non</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Prix Minimal</label>
+                                                        <input type="text" class="form-control"
+                                                               placeholder="recherche prix min"
+                                                               style="border-radius: 3rem;" name="prix_min">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Prix Maximal</label>
+                                                        <input type="text" class="form-control"
+                                                               placeholder="recherche prix max"
+                                                               style="border-radius: 3rem;" name="prix_max">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-success" style="margin-top: 3rem;float: right;">
+                                                Lancer Le Filtre
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        <br>
+                        <table class="table">
+                            {% if produits %}
+                            <thead>
+                            <tr>
+                                <th style=' text-align: center;'>Action</th>
+                                <th style=' text-align: center;'>Categories</th>
+                                <th style=' text-align: center;'>Produits</th>
+                                <th style=' text-align: center;'>Prix</th>
+                                <th style=' text-align: center;'>Disponibilité</th>
+                                <th style=' text-align: center;'>Images</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for produit in produits %}
+                            <tr>
+                                <td style="text-align:center;padding-top: 4rem;">
+                                    {% if etat == "non connecter" %}
+                                    <form action="{{url_for('Auth API.se_connecter')}}" method="GET"><input
+                                            type="submit" class="btn btn-primary" value="Ajouter au Panier"></form>
+                                    {% elif etat == "connecter" %}
+                                    {% if produit.quantite != 0 %}
+                                    <form action="{{url_for('Pannier API.insert_produit_into_pannier',id_user=session.id,id_prod=produit.id)}}"
+                                          method="POST"><input type="submit" class="btn btn-primary"
+                                                               value="Ajouter au Panier"></form>
+                                    {% else %}
+                                    <input type="submit" class="btn btn-primary" value="Ajouter au Panier" disabled>
+                                    {%endif%}
+                                    {%endif%}
+                                </td>
+                                <td style="text-align:center;padding-top: 4rem;">{{produit.categorie}}</td>
+                                <td style="text-align:center;padding-top: 4rem;">{{produit.libelle}}</td>
+                                <td style="text-align:center;padding-top: 4rem;">{{produit.prix}} dt</td>
+                                {% if produit.quantite != 0 %}
+                                <td style="text-align:center;color: mediumseagreen;padding-top: 4rem;">Disponible</td>
+                                {% else %}
+                                <td style="text-align:center;color: red;padding-top: 4rem;">Hors Stock</td>
+                                {% endif %}
+                                <td style="text-align:center;">
+                                    <img src="{{url_for('static', filename='/images_produits/' + produit.image)}}"
+                                         align="right" width="120" height="90">
+                                </td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                            {% else %}
+                            <h3>Aucune résultat</h3>
+                            {%endif%}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function maFonction() {
+          var div = document.getElementById("maDIV");
+          if (div.style.display === "none") {
+            div.style.display = "block";
+          } else {
+            div.style.display = "none";
+          }
+        }
+
+    </script>
+    <script src="{{url_for('static',filename='/js1/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/jquery.easing.1.3.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/jquery.waypoints.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/jquery.stellar.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/owl.carousel.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/jquery.countTo.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/jquery.magnific-popup.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/magnific-popup-options.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/main.js')}}"></script>
+</body>
+</html>
+

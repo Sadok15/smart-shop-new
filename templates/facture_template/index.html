@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Example 2</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/facture.css') }}"  />
+  </head>
+  <body  style="position: relative;
+  width: 21cm;
+  height: 29.7cm;
+  margin: 0 auto;
+  color: #555555;
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-family: SourceSansPro;">
+    <header class="clearfix" style="padding: 10px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #AAAAAA;">
+      <div id="logo">
+        <img src="logo.png">
+      </div>
+      <div id="company" style=" float: right;
+    text-align: right;
+    color: #0087C3;
+    font-size: 2.4em;
+    line-height: 1em;
+    font-weight: normal;
+    margin: 0 0 10px 0;">
+        <h2 class="name" style="    font-size: 1.4em;
+    font-weight: normal;" >SN Company</h2>
+        <div  color : black>Rue HBIB Bourguiba </div>
+        <div><a style="    font-size: 1.2em;
+    font-weight: normal;
+    margin: 1;
+    color:black;
+    margin: 0 0 10px 0;" href="mailto:company@example.com">SN@gmail.com</a></div>
+      </div>
+      </div>
+    </header>
+    <main>
+      <div id="details" class="clearfix" style=" margin-bottom: 50px;content: ;
+  display: table;
+  clear: both;">
+        <div >
+          <div style=" color: #0087C3;
+  font-size: 2.4em;
+  line-height: 1em;
+  font-weight: normal;
+  margin: 0  0 10px 0;">FACTURE A:</div>
+          <h2 style=" color: black;
+  font-size: 2.4em;
+  line-height: 1em;
+  font-weight: normal;
+  margin: 0  0 10px 0;">{{name}}</h2>
+          <div class="email"><a style=" color: black;
+  font-size: 2.4em;
+  line-height: 1em;
+  font-weight: normal;
+  margin: 0  0 10px 0;" href="mailto:john@example.com">{{mail}}</a></div>
+        </div>
+        <div style=" float: right;
+  text-align: right;">
+          <h1 style="     color: #0087C3;
+    font-size: 2.4em;
+    line-height: 1em;
+    font-weight: normal;
+    align-content: center;
+    margin-left: 500px;">FACTURE 3-2-1</h1>
+          <div style="font-size: 1.1em;
+  color: #777777; color: #0087C3;
+  font-size: 2.4em;
+  line-height: 1em;
+  font-weight: normal;
+  margin: 0  0 10px 0;" >{{date}}</div>
+        </div>
+      </div>
+      <table border="0" cellspacing="0" cellpadding="0" style="width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px; table td {
+  padding: 20px;
+  background: #EEEEEE;
+  text-align: center;
+  border-bottom: 1px solid #FFFFFF;
+}">
+        <thead>
+          <tr>
+            <th class="desc" style=" color: #FFFFFF;
+  font-size: 1.6em;
+  background: #57B223;white-space: nowrap;
+  font-weight: normal;">Produit</th>
+            <th class="unit" style=" color: #FFFFFF;
+  font-size: 1.6em;
+  background: #57B223;white-space: nowrap;
+  font-weight: normal;">Prix</th>
+            <th class="qty" style=" color: #FFFFFF;
+  font-size: 1.6em;
+  background: #57B223;white-space: nowrap;
+  font-weight: normal;">quantite</th>
+            <th class="total" style=" color: #FFFFFF;
+  font-size: 1.6em;
+  background: #57B223;white-space: nowrap;
+  font-weight: normal;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for produit in produits %}
+          <tr>
+            <td class="desc"><h3 style="color: #57B223;
+  font-size: 1.2em;
+  font-weight: normal;
+  margin: 0 0 0.2em 0;">{{produit.libelle}}</h3></td>
+            <td class="unit" style=" font-size: 1.2em; padding: 20px;
+  background: #EEEEEE;
+  text-align: center;
+  border-bottom: 1px solid #FFFFFF;">{{produit.prix}}dt</td>
+            <td class="qty" style=" font-size: 1.2em; padding: 20px;
+  background: #EEEEEE;
+  text-align: center;
+  border-bottom: 1px solid #FFFFFF;">{{produit.quantite_pannier}}</td>
+            <td class="total" style=" font-size: 1.2em; padding: 20px;
+  background: #EEEEEE;
+  text-align: center;
+  border-bottom: 1px solid #FFFFFF;">{{produit.total_prod}}dt</td>
+          </tr>
+        {%endfor%}
+        </tbody>
+        <tfoot style="padding: 10px 20px;
+  background: #FFFFFF;
+  border-bottom: none;
+  font-size: 1.2em;
+  white-space: nowrap;
+  border-top: 1px solid #AAAAAA; ">
+          <tr>
+            <td colspan="2" style="border-top: none "></td>
+            <td colspan="2" style="color: red;
+    font-size: 23px;">Total</td>
+            <td>{{totale}}</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style=" font-size: 2em;
+  margin-bottom: 50px;">Merci!</div>
+      <div style="  padding-left: 6px;
+  border-left: 6px solid #0087C3;  ">
+        <div>NOTICE:</div>
+        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+      </div>
+    </main>
+    <footer style=" color: #777777;
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #AAAAAA;
+  padding: 8px 0;
+  text-align: center;">
+      Invoice was created on a computer and is valid without the signature and seal.
+    </footer>
+  </body>
+</html>

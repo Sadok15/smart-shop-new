@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SMART_SHOP</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/animate.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/icomoon.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/magnific-popup.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/owl.carousel.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/owl.theme.default.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/style.css')}}">
+    <script src="{{url_for('static',filename='/js1/modernizr-2.6.2.min.js')}}"></script>
+    <script src="{{url_for('static',filename='/js1/respond.min.js')}}"></script>
+
+</head>
+<body>
+<div class="fh5co-loader"></div>
+<div id="page">
+    <nav class="fh5co-nav" role="navigation">
+        <div class="top-menu">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-1">
+                        {% if etat == "connecter" %}
+                        <div id="fh5co-logo"><a href="{{url_for('Products API.get_list_produits')}}">SMART<span>.</span>SHOP</a>
+                        </div>
+                        {% elif etat == "non connecter" %}
+                        <div id="fh5co-logo"><a href="{{url_for('Auth API.acceuil')}}">SMART<span>.</span>SHOP</a></div>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-11 text-right menu-1">
+                        <ul>
+                            {% if etat == "connecter" %}
+                            <li><a href="{{url_for('Products API.get_list_produits')}}">Acceuil</a></li>
+                            {% elif etat == "non connecter" %}
+                            <li class="active"><a href="{{url_for('Auth API.acceuil')}}">Acceuil</a></li>
+                            {% endif %}
+                            <li class="has-dropdown">
+                                <a href="#">Categories</a>
+                                <ul class="dropdown">
+                                    <li>
+                                        <a href="{{url_for('Products API.get_produits_by_cat',id_cat=1)}}">Accessoires</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{url_for('Products API.get_produits_by_cat',id_cat=2)}}">Smartphone</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{url_for('Products API.get_produits_by_cat',id_cat=3)}}">Ordinateurs</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% if etat == "connecter" %}
+                            <li class="active">
+                                <a href="{{url_for('Pannier API.get_pannier_by_id_user',id_user=session.id)}}">Pannier</a>
+                            </li>
+                            <li><a href="{{url_for('Auth API.profile')}}">Profile</a></li>
+                            <li class="btn-cta">
+                                <a href="{{url_for('Auth API.se_connecter')}}"><span>deconnexion</span></a>
+                            </li>
+                            <li class="btn-cta">
+                                <a href="{{url_for('Auth API.profile')}}"><span>{{ session.name }} {{ session.lastname }}</span></a>
+                            </li>
+                            {% elif etat == "non connecter" %}
+                            <li class="btn-cta">
+                                <a href="{{url_for('Auth API.se_connecter')}}"><span>connexion</span></a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header id="fh5co-header" class="fh5co-cover" role="banner"
+            style="background-image:url({{url_for('static',filename='/images/img_bg_1.jpg')}});"
+            data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <div class="display-t">
+                        <div class="display-tc animate-box" data-animate-effect="fadeIn">
+                            <h1>Votre Pannier</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="fh5co-explore" class="fh5co-bg-section">
+        <div class="container">
+            <div class="row animate-box">
+                <div class="col-md-12 col-md-offset-0 fh5co-heading">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <br>
+                    <table class="table">
+                        {% if produits %}
+                        <thead>
+                        <tr>
+                            <th style=' text-align: center;'>Effacer</th>
+                            <th style=' text-align: center;'>Produits</th>
+                            <th style=' text-align: center;'>Prix</th>
+                            <th style=' text-align: center;'>Images</th>
+                            <th style=' text-align: center;'>quantité</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for produit in produits %}
+                        <tr>
+                            <td style="text-align:center;padding-top: 4rem;">
+                                <form action="{{url_for('Pannier API.delete_produit_from_pannier',id_user=session.id , id_prod=produit.id)}}"
+                                      method="GET">
+                                    <input type="submit" class="btn btn-danger" value="Retirer">
+                                </form>
+                            </td>
+                            <td style="text-align:center;padding-top: 4rem;">{{produit.libelle}}</td>
+                            <td style="text-align:center;padding-top: 4rem;">{{produit.prix}} dt</td>
+                            <td style="text-align:center;">
+                                <img src="{{url_for('static', filename='/images_produits/' + produit.image)}}"
+                                     align="right" width="120" height="90">
+                            </td>
+                            <td style="text-align:center;padding-top: 4rem;">
+                                <form method="GET">
+                                    {% if produit.quantite_pannier !=0 %}
+                                    <input type="submit" class="btn btn-primary" value="-"
+                                           style="padding: 0rem 1rem 0rem;"
+                                           formaction="{{url_for('Pannier API.min_produit_from_pannier',id_user=session.id , id_prod=produit.id)}}">
+                                    {% else %}
+                                    <input type="submit" class="btn btn-primary" value="-"
+                                           style="padding: 0rem 1rem 0rem;" disabled>
+                                    {%endif%}
+                                    {{produit.quantite_pannier}}
+                                    <input type="submit" class="btn btn-primary" value="+"
+                                           style="padding: 0rem 1rem 0rem;"
+                                           formaction="{{url_for('Pannier API.max_produit_from_pannier',id_user=session.id , id_prod=produit.id)}}">
+                                </form>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        </tbody>
+                        {% else %}
+                        <h3>Panier Vide</h3>
+                        {%endif%}
+                    </table>
+                    <form method="POST" action="{{url_for('Pannier API.facture_pdf',id_user=session.id)}}"
+                          style="float: right;padding-top: 8rem;">
+                        <!--<input type="hidden" value="{{session.id}}" name="id_user">!-->
+                        <input type="submit" class="btn btn-primary" value="Facturer Vos Achat">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src=" {{url_for('static',filename='/js1/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/jquery.easing.1.3.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/jquery.waypoints.min.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/jquery.stellar.min.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/owl.carousel.min.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/jquery.countTo.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/jquery.magnific-popup.min.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/magnific-popup-options.js')}}"></script>
+<script src="{{url_for('static',filename='/js1/main.js')}}"></script>
+</body>
+</html>
+
